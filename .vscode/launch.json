@@ -11,7 +11,7 @@
       "name": "Launch via NPM",
       "runtimeExecutable": "npm",
       "runtimeArgs": [
-        "test", "connect", "wss://echo.websocket.org/"
+        "test", "listen", "9000"
       ],
       "port": 9229
     },
