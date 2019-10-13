@@ -28,5 +28,8 @@
   "bugs": {
     "url": "https://github.com/danhab99/ws-cli/issues"
   },
-  "homepage": "https://github.com/danhab99/ws-cli#readme"
+  "homepage": "https://github.com/danhab99/ws-cli#readme",
+  "bin": {
+    "ws-cli": "./index.js"
+  }
 }
