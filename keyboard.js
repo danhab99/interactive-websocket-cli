@@ -37,10 +37,17 @@ module.exports = class Keyboard extends EventEmitter {
     })
   }
 
+  fix_prompt() {
+    if (this.prompting) {
+      process.stdout.write(`\r${this.header} <<< ${this.buffer}`)
+    }
+  }
+
   prompt(header) {
     this.emit('prompting')
     this.prompting = true
     this.buffer = ""
+    this.header = header
     process.stdout.write(header + ' <<< ')
     return new Promise((resolve, reject) => {
       process.stdin.on('keypress', (str, key) => {

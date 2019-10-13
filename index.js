@@ -5,13 +5,16 @@ const WebSocket = require('ws');
 const Keyboard = require('./keyboard')
 
 program.version(require('./package.json').version)
+
+program
+  .option('')
+
 program.command('listen <port>')
   .description('Listen for websocket connections on a port')
   .action(port => {
     const wss = new WebSocket.Server({ port: port })
+    var keyboard = new Keyboard()
     var counter = 0
-    var outOn = true
-    var mode = ''
     var clients = []
  
     wss.on('connection', ws => {
@@ -20,21 +23,12 @@ program.command('listen <port>')
       ws.number = counter++
       console.log(`!!! Client #${ws.number} connected`)
       ws.on('message', msg => {
-        if (outOn && ws.enabled) {
-          console.log(`${Date.now()} #${ws.number} >>> ${JSON.stringify(msg)}`)
+        if (ws.enabled) {
+          process.stdout.write(`\r${Date.now()} #${ws.number} >>> ${JSON.stringify(msg)}\n`)
+          keyboard.fix_prompt()
         }
       });
     });
-
-    var keyboard = new Keyboard()
-
-    keyboard.on('prompting', () => {
-      outOn = false
-    })
-
-    keyboard.on('done-prompting', () => {
-      outOn = true
-    })
     
     keyboard.on('s', () => {
       keyboard.prompt('select').then(raw => {
@@ -121,20 +115,11 @@ program.command('connect <address>')
     
     ws.on('message', msg => {
       // TODO: Make tabsize a setting
-      if (outOn) {
-        console.log(`${Date.now()} >>> ${JSON.stringify(msg)}`) // TODO: Pretty print
-      }
+      process.stdout.write(`${Date.now()} >>> ${JSON.stringify(msg)}`) // TODO: Pretty print
+      keyboard.fix_prompt()
     })
 
     let keyboard = new Keyboard()
-
-    keyboard.on('prompting', () => {
-      outOn = false
-    })
-
-    keyboard.on('done-prompting', () => {
-      outOn = true
-    })
 
     keyboard.on('s', () => {
       keyboard.prompt('send').then(raw => {
@@ -156,7 +141,5 @@ program.command('connect <address>')
 
 program.parse(process.argv)
 
-
 process.stdin.setRawMode(true);
 process.stdin.resume();
-
