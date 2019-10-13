@@ -98,6 +98,16 @@ program.command('listen <port>')
         }
       })
     })
+
+    keyboard.on('h', () => {
+      console.log(`
+      [s] open select prompt
+      [S] print selected clients
+      [t] transmits message to selected clients
+      [b] broadcasts message to all clients
+      [k] close selected clients
+      `)
+    })
   })
 
   
@@ -135,6 +145,12 @@ program.command('connect <address>')
           console.error(e)
         }
       })
+    })
+
+    keyboard.on('h', () => {
+      console.log(`
+      [s] send a message to server
+      `)
     })
   })
 
