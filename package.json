@@ -1,5 +1,5 @@
 {
-  "name": "ws-cli",
+  "name": "@danhab99/ws-cli",
   "version": "0.0.1",
   "description": "A websocket client for cli",
   "main": "index.js",
@@ -31,5 +31,6 @@
   "homepage": "https://github.com/danhab99/ws-cli#readme",
   "bin": {
     "ws-cli": "./index.js"
-  }
+  },
+  "publishConfig": { "registry": "https://npm.pkg.github.com/" }
 }
