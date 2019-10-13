@@ -1,0 +1,29 @@
+{
+  "name": "ws-cli",
+  "version": "0.0.1",
+  "description": "A websocket client for cli",
+  "main": "index.js",
+  "dependencies": {
+    "commander": "^3.0.2",
+    "ws": "^7.1.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danhab99/ws-cli.git"
+  },
+  "keywords": [
+    "websockets",
+    "ws",
+    "cli"
+  ],
+  "author": "Dan Habot <dan.habot@gmail.com> (danhab99)",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/danhab99/ws-cli/issues"
+  },
+  "homepage": "https://github.com/danhab99/ws-cli#readme"
+}
