@@ -20,7 +20,7 @@ module.exports = class Keyboard extends EventEmitter {
     process.stdout.write(header + ' <<< ')
     return new Promise((resolve, reject) => {
       var buffer = ""
-      process.stdin.on('keypress', (ch, key) => {
+      var listn = process.stdin.on('keypress', (ch, key) => {
         if (key) {
           if (key.ctrl && key.name == 'd') {
             process.stdout.write('\r')
@@ -32,14 +32,17 @@ module.exports = class Keyboard extends EventEmitter {
           if (key.name == 'return') {
             process.stdout.write('\n')
             this.emit('done-prompting')
-            // keypress(process.stdin)
+            process.stdin.resume()
+            listn.end()
             resolve(buffer)
             return
           }
         
           if (key.name == 'backspace') {
-            buffer = buffer.slice(0, -1)
-            process.stdout.write('\b \b')
+            if (buffer.length > 0) {
+              buffer = buffer.slice(0, -1)
+              process.stdout.write('\b \b')
+            }
             return
           }
         }

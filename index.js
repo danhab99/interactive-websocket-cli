@@ -106,6 +106,8 @@ program.command('listen <port>')
       })
     })
   })
+
+  
 program.command('connect <address>')
   .description('Connect to a websocket at an address')
   .action(address => {
@@ -140,9 +142,8 @@ program.command('connect <address>')
 
 program.parse(process.argv)
 
-if (process.stdin.setRawMode){
-  process.stdin.setRawMode(true);
-}
+
+process.stdin.setRawMode(true);
 process.stdin.resume();
 
 process.stdin.on('keypress', (ch, key) => {
