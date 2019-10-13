@@ -1,8 +1,6 @@
 const program = require('commander');
 const WebSocket = require('ws');
-var keypress = require('keypress');
-
-keypress(process.stdin);
+const Keyboard = require('./keyboard')
 
 program.version(require('./package.json').version)
 program.command('listen <port>')
@@ -10,13 +8,103 @@ program.command('listen <port>')
   .action(port => {
     const wss = new WebSocket.Server({ port: port })
     var counter = 0
+    var outOn = true
+    var mode = ''
+    var clients = []
  
-    wss.on('connection', function connection(ws) {
+    wss.on('connection', ws => {
+      clients.push(ws)
+      ws.enabled = true // TODO setting
       ws.number = counter++
-      ws.on('message', function incoming(data) {
-        
+      console.log(`!!! Client #${ws.number} connected`)
+      ws.on('message', msg => {
+        if (outOn && ws.enabled) {
+          console.log(`${Date.now()} #${ws.number} >>> ${JSON.parse(msg)}`)
+        }
       });
     });
+
+    const select = args => {
+      for(let c in clients) {
+        c.enabled = false
+      }
+      for(let n in args) {
+        n.enabled = true
+      }
+    }
+
+    var keyboard = new Keyboard()
+
+    keyboard.on('prompting', () => {
+      outOn = false
+    })
+
+    keyboard.on('done-prompting', () => {
+      outOn = true
+    })
+    
+    keyboard.on('s', () => {
+      keyboard.prompt('select').then(raw => {
+        let s = raw.split(',');
+        for (let index = 0; index < s.length; index++) {
+          s[index] = parseInt(s[index]);
+        }
+        select(s)
+      })
+    })
+
+    keyboard.on('l', () => {
+      console.log(`CLIENTS: ${JSON.stringify(clients)}`)
+    })
+
+    keyboard.on('S', () => {
+      process.stdout.write('SELECTED: ')
+      for (let index = 0; index < clients.length; index++) {
+        const element = clients[index];
+        if (element.enabled) {
+          process.stdout.write(index.toString() + ', ')
+        }
+      }
+      process.stdout.write('\n')
+    })
+
+    keyboard.on('t', () => {
+      keyboard.prompt('transmit').then(raw => {
+        try {
+          let j = JSON.parse(raw)
+          for(let cli in clients) {
+            if (clients[cli].enabled) {
+              clients[cli].send(j)
+            }
+          }
+        }
+        catch (e) {
+          console.error(e)
+        }
+        
+      })
+    })
+
+    keyboard.on('b', () => {
+      keyboard.prompt('broadcast').then(raw => {
+        let j = JSON.parse(raw)
+        for(let cli in clients) {
+          clients[cli].send(j)
+        }
+      })
+    })
+
+    keyboard.on('k', () => {
+      keyboard.prompt(`are you sure you want to close ${clients.length} connections [yn]`).then(raw => {
+        if (raw == 'y') {
+          for(let cli in clients) {
+            if (cli.enabled) {
+              cli.close()
+            }
+          }
+        }
+      })
+    })
   })
 program.command('connect <address>')
   .description('Connect to a websocket at an address')
@@ -33,50 +121,20 @@ program.command('connect <address>')
       }
     })
 
-    process.stdin.on('keypress', (ch, key) => {
-      if (key) {
-        if (key.ctrl && key.name == 'c') {
-          ws.close()
-          process.stdin.pause();
-          process.exit(0)
-          return
-        }
-        
-        if (outOn && key.name == 'r') {
-          process.stdin.pause()
-          outOn = false;
-          process.stdout.write('<<< ')
-  
-          process.stdin.resume()
-          return
-        }
+    let keyboard = new Keyboard()
 
-        if (!outOn) {
-          if (key.ctrl && key.name == 'd') {
-            process.stdout.write('\r')
-            outOn = true;
-            return
-          }
-  
-          // TODO: Factor out the boolean expressions
-          if (key.name == 'return') {
-            process.stdout.write('\n')
-            outOn = true; // TODO: Make auto-outon a setting
-            ws.send(JSON.stringify(buffer))
-            buffer = ""
-            keypress(process.stdin)
-            return
-          }
-  
-          if (key.name == 'backspace') {
-            buffer = buffer.slice(0, -1)
-            process.stdout.write('\b \b')
-            return
-          }
-        }
-        buffer += ch
-        process.stdout.write(ch)
-      }
+    keyboard.on('prompting', () => {
+      outOn = false
+    })
+
+    keyboard.on('done-prompting', () => {
+      outOn = true
+    })
+
+    keyboard.on('r', () => {
+      keyboard.prompt('').then(raw => {
+        ws.send(JSON.stringify(raw))
+      })
     })
   })
 
@@ -86,3 +144,10 @@ if (process.stdin.setRawMode){
   process.stdin.setRawMode(true);
 }
 process.stdin.resume();
+
+process.stdin.on('keypress', (ch, key) => {
+  if (key && key.ctrl && key.name == 'c') {
+    process.stdin.pause();
+    process.exit(0)
+  }
+})
