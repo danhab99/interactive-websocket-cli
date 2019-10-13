@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const program = require('commander');
 const WebSocket = require('ws');
 const Keyboard = require('./keyboard')
