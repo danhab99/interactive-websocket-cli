@@ -19,7 +19,7 @@ program.command('listen <port>')
       console.log(`!!! Client #${ws.number} connected`)
       ws.on('message', msg => {
         if (outOn && ws.enabled) {
-          console.log(`${Date.now()} #${ws.number} >>> ${JSON.parse(msg)}`)
+          console.log(`${Date.now()} #${ws.number} >>> ${JSON.stringify(msg)}`)
         }
       });
     });
@@ -71,17 +71,15 @@ program.command('listen <port>')
     keyboard.on('t', () => {
       keyboard.prompt('transmit').then(raw => {
         try {
-          let j = JSON.parse(raw)
           for(let cli in clients) {
             if (clients[cli].enabled) {
-              clients[cli].send(j)
+              clients[cli].send(raw)
             }
           }
         }
         catch (e) {
           console.error(e)
         }
-        
       })
     })
 
@@ -133,9 +131,14 @@ program.command('connect <address>')
       outOn = true
     })
 
-    keyboard.on('r', () => {
-      keyboard.prompt('').then(raw => {
-        ws.send(JSON.stringify(raw))
+    keyboard.on('s', () => {
+      keyboard.prompt('send').then(raw => {
+        try {
+          ws.send(JSON.parse(raw))
+        }
+        catch (e) {
+          console.error(e)
+        }
       })
     })
   })
@@ -146,9 +149,3 @@ program.parse(process.argv)
 process.stdin.setRawMode(true);
 process.stdin.resume();
 
-process.stdin.on('keypress', (ch, key) => {
-  if (key && key.ctrl && key.name == 'c') {
-    process.stdin.pause();
-    process.exit(0)
-  }
-})

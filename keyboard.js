@@ -1,15 +1,38 @@
-var keypress = require('keypress');
+const readline = require('readline');
 var EventEmitter = require('events').EventEmitter
-keypress(process.stdin);
+readline.emitKeypressEvents(process.stdin);
+
+process.stdin.on('keypress', (str, key) => {
+  if (key.sequence === '\u0003') {
+    process.exit();
+  }
+})
 
 module.exports = class Keyboard extends EventEmitter {
   constructor() {
     super()
     this.prompting = false
+    this.buffer = ""
 
-    process.stdin.on('keypress', (ch, key) => {
+    process.stdin.on('keypress', (str, key) => {
       if (!this.prompting) {
-        this.emit(ch)
+        this.emit(str)
+      }
+      else {
+        if (key && key.sequence === '\r') {
+          process.stdout.write('\n')
+          return
+        }
+        else if (key.name === 'backspace') {
+          if (this.buffer.length > 0) {
+            this.buffer = this.buffer.slice(0, -1)
+            process.stdout.write('\b \b')
+          }
+        }
+        else {
+          this.buffer += key.sequence
+          process.stdout.write(str)
+        }
       }
     })
   }
@@ -17,38 +40,15 @@ module.exports = class Keyboard extends EventEmitter {
   prompt(header) {
     this.emit('prompting')
     this.prompting = true
+    this.buffer = ""
     process.stdout.write(header + ' <<< ')
     return new Promise((resolve, reject) => {
-      var buffer = ""
-      var listn = process.stdin.on('keypress', (ch, key) => {
-        if (key) {
-          if (key.ctrl && key.name == 'd') {
-            process.stdout.write('\r')
-            this.emit('done-prompting')
-            reject()
-            return
-          }
-        
-          if (key.name == 'return') {
-            process.stdout.write('\n')
-            this.emit('done-prompting')
-            process.stdin.resume()
-            listn.end()
-            resolve(buffer)
-            return
-          }
-        
-          if (key.name == 'backspace') {
-            if (buffer.length > 0) {
-              buffer = buffer.slice(0, -1)
-              process.stdout.write('\b \b')
-            }
-            return
-          }
+      process.stdin.on('keypress', (str, key) => {
+        if (key && key.sequence === '\r') {
+          resolve(this.buffer)
+          this.prompting = false
+          this.emit('done-prompting')
         }
-        
-        buffer += ch
-        process.stdout.write(ch)
       })
     })
   }
