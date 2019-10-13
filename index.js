@@ -46,7 +46,13 @@ program.command('listen <port>')
     })
 
     keyboard.on('l', () => {
-      console.log(`CLIENTS: ${JSON.stringify(clients)}`)
+      process.stdout.write('CLIENTS: ')
+      clients.forEach(element => {
+        if (element.OPEN) {
+          process.stdout.write(`${element.number}, `)
+        }
+      });
+      process.stdout.write('\n')
     })
 
     keyboard.on('S', () => {
@@ -84,11 +90,11 @@ program.command('listen <port>')
     })
 
     keyboard.on('k', () => {
-      keyboard.prompt(`are you sure you want to close ${clients.length} connections [yn]`).then(raw => {
+      keyboard.prompt(`are you sure you want to close selected connections [yn]`).then(raw => {
         if (raw == 'y') {
           for(let cli in clients) {
-            if (cli.enabled) {
-              cli.close()
+            if (clients[cli].enabled) {
+              clients[cli].close()
             }
           }
         }
@@ -111,14 +117,17 @@ program.command('connect <address>')
   .description('Connect to a websocket at an address')
   .action(address => {
     const ws = new WebSocket(address)
-    var outOn = true
-    var buffer = ""
     ws.on('open', () => console.log('!!! Connected'))
     
     ws.on('message', msg => {
       // TODO: Make tabsize a setting
       process.stdout.write(`\r${Date.now()} >>> ${JSON.stringify(msg)}\n`) // TODO: Pretty print
       keyboard.fix_prompt()
+    })
+
+    ws.on('close', () => {
+      console.error('!!! Server closed connection')
+      process.exit(1)
     })
 
     let keyboard = new Keyboard()
