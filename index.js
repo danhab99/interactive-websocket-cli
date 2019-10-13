@@ -24,15 +24,6 @@ program.command('listen <port>')
       });
     });
 
-    const select = args => {
-      for(let c in clients) {
-        c.enabled = false
-      }
-      for(let n in args) {
-        n.enabled = true
-      }
-    }
-
     var keyboard = new Keyboard()
 
     keyboard.on('prompting', () => {
@@ -46,10 +37,13 @@ program.command('listen <port>')
     keyboard.on('s', () => {
       keyboard.prompt('select').then(raw => {
         let s = raw.split(',');
-        for (let index = 0; index < s.length; index++) {
-          s[index] = parseInt(s[index]);
+        for (let index = 0; index < clients.length; index++) {
+          clients[index].enabled = false;
         }
-        select(s)
+        for (let index = 0; index < s.length; index++) {
+          i = parseInt(s[index]);
+          clients[i].enabled = true
+        }
       })
     })
 
@@ -85,9 +79,8 @@ program.command('listen <port>')
 
     keyboard.on('b', () => {
       keyboard.prompt('broadcast').then(raw => {
-        let j = JSON.parse(raw)
         for(let cli in clients) {
-          clients[cli].send(j)
+          clients[cli].send(raw)
         }
       })
     })
@@ -117,7 +110,7 @@ program.command('connect <address>')
     ws.on('message', msg => {
       // TODO: Make tabsize a setting
       if (outOn) {
-        console.log(`${Date.now()} >>> ${JSON.stringify(msg, null, 4)}`)
+        console.log(`${Date.now()} >>> ${JSON.stringify(msg)}`) // TODO: Pretty print
       }
     })
 
@@ -134,7 +127,7 @@ program.command('connect <address>')
     keyboard.on('s', () => {
       keyboard.prompt('send').then(raw => {
         try {
-          ws.send(JSON.parse(raw))
+          ws.send(raw)
         }
         catch (e) {
           console.error(e)
