@@ -32,13 +32,15 @@ program.command('listen <port>')
     
     keyboard.on('s', () => {
       keyboard.prompt('select').then(raw => {
-        let s = raw.split(',');
-        for (let index = 0; index < clients.length; index++) {
-          clients[index].enabled = false;
-        }
-        for (let index = 0; index < s.length; index++) {
-          i = parseInt(s[index]);
-          clients[i].enabled = true
+        if (raw != '') {
+          let s = raw.split(',');
+          for (let index = 0; index < clients.length; index++) {
+            clients[index].enabled = false;
+          }
+          for (let index = 0; index < s.length; index++) {
+            i = parseInt(s[index]);
+            clients[i].enabled = true
+          }
         }
       })
     })
