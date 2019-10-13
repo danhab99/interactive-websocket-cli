@@ -50,13 +50,15 @@ module.exports = class Keyboard extends EventEmitter {
     this.header = header
     process.stdout.write(header + ' <<< ')
     return new Promise((resolve, reject) => {
-      process.stdin.on('keypress', (str, key) => {
+      let listen = (str, key) => {
         if (key && key.sequence === '\r') {
+          process.stdin.removeListener('keypress', listen)
           resolve(this.buffer)
           this.prompting = false
           this.emit('done-prompting')
         }
-      })
+      }
+      process.stdin.on('keypress', listen)
     })
   }
 }

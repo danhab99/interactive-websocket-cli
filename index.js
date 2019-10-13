@@ -115,7 +115,7 @@ program.command('connect <address>')
     
     ws.on('message', msg => {
       // TODO: Make tabsize a setting
-      process.stdout.write(`${Date.now()} >>> ${JSON.stringify(msg)}`) // TODO: Pretty print
+      process.stdout.write(`\r${Date.now()} >>> ${JSON.stringify(msg)}\n`) // TODO: Pretty print
       keyboard.fix_prompt()
     })
 
