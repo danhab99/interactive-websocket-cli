@@ -10,6 +10,7 @@ module.exports = (program, port) => {
       cws.pipe(process.stdout)
     })
   } else {
+    console.log('!!! Listening')
     var keyboard = new Keyboard();
     var counter = 0;
     var clients = [];
