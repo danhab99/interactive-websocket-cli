@@ -6,9 +6,6 @@ const Keyboard = require('./keyboard')
 
 program.version(require('./package.json').version)
 
-program
-  .option('')
-
 program.command('listen <port>')
   .description('Listen for websocket connections on a port')
   .action(port => {
@@ -117,7 +114,7 @@ program.command('connect <address>')
     
     ws.on('message', msg => {
       // TODO: Make tabsize a setting
-      process.stdout.write(`\r${Date.now()} >>> ${JSON.stringify(msg)}\n`) // TODO: Pretty print
+      process.stdout.write(`\r${Date.now()} >>> ${JSON.stringify(msg, null, 2)}\n`) // TODO: Pretty print
       keyboard.fix_prompt()
     })
 
