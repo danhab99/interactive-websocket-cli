@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 
 const program = require('commander');
-const WebSocket = require('ws');
-const Keyboard = require('./keyboard')
 const Server = require('./server')
 const Connect = require('./connect')
 
@@ -32,6 +30,11 @@ program.command('connect <address>')
 
 program.parse(process.argv)
 debugger
+if (mode === undefined) {
+  program.help()
+  process.exit(1)
+}
+
 if (process.stdin.setRawMode){
   process.stdin.setRawMode(true);
 }
