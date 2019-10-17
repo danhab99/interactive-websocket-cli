@@ -3,6 +3,7 @@ const Keyboard = require('./keyboard')
 
 module.exports = (program, address) => {
   const ws = new WebSocket(address)
+  ws.on('close', () => process.exit(1))
   
   if (program.pipeStdin) {
     // Pipe
@@ -16,7 +17,7 @@ module.exports = (program, address) => {
     
     ws.on('message', msg => {
       // TODO: Make tabsize a setting
-      process.stdout.write(`\r${Date.now()} >>> ${JSON.stringify(msg, null, 2)}\n`) // TODO: Pretty print
+      process.stdout.write(`\r${Date.now()} >>> ${JSON.stringify(msg)}\n`) // TODO: Pretty print
       keyboard.fix_prompt()
     })
 
