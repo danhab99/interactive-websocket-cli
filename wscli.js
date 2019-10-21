@@ -3,8 +3,8 @@
 const Server = require('./server')
 const Connect = require('./connect')
 
-const {parse} = require('./program')()
-const mode = parse()
+var {program, parse} = require('./program')()
+program = parse()
 
 if (process.stdin.setRawMode){
   process.stdin.setRawMode(true);
@@ -13,9 +13,9 @@ if (process.stdin.setRawMode){
 process.stdin.resume();
 
 if (mode.mode == 'listen') {
-  Server(program, mode.port)
+  Server(program)
 }
 
 if (mode.mode == 'connect') {
-  Connect(program, mode.address)
+  Connect(program)
 }

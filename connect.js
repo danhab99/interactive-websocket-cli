@@ -1,8 +1,8 @@
 const WebSocket = require('ws');
 const Keyboard = require('./keyboard')
 
-module.exports = (program, address) => {
-  const ws = new WebSocket(address)
+module.exports = (program) => {
+  const ws = new WebSocket(program.address)
   ws.on('close', () => process.exit(1))
   
   if (program.pipeStdin) {
