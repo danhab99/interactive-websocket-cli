@@ -98,7 +98,7 @@ module.exports = (program, port) => {
 
     keyboard.on("h", () => {
       console.log(`
-    [s] open select prompt
+    [s] open select prompt, used to select which connections are being displayed and will receive transmit messages. comma seperated numbers
     [S] print selected clients
     [t] transmits message to selected clients
     [b] broadcasts message to all clients
