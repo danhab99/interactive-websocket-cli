@@ -13,10 +13,10 @@ if (process.stdin.setRawMode){
 
 process.stdin.resume();
 
-if (mode.mode == 'listen') {
+if (program.mode == 'listen') {
   Server(program)
 }
 
-if (mode.mode == 'connect') {
+if (program.mode == 'connect') {
   Connect(program)
 }
