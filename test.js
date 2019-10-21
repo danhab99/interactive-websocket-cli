@@ -88,7 +88,25 @@ describe('wscli', function() {
       setTimeout(() => {
         server.stdin.write(data)
       }, 500)
+    })
       
+    it('can transmit message to broken client', function(done) {
+      var server = spawn('node', ['./bin/wscli.js', '-p', 'listen', port])
+      var transmit = spawn('node', ['./bin/wscli.js', '-p', 'connect', `ws://localhost:${port}`])
+      transmit.kill()
+      server.on('error', c => {
+        console.error(c)
+      })
+    
+      setTimeout(() => {
+        assert.ok(true)
+        server.kill()
+        done()
+      }, 600)
+
+      setTimeout(() => {
+        server.stdin.write(data)
+      }, 500)
     })
   })
 })

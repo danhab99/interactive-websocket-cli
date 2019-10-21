@@ -68,8 +68,9 @@ module.exports = (program) => {
       keyboard.prompt("transmit").then(raw => {
         try {
           for (let cli in clients) {
-            if (clients[cli].enabled) {
-              clients[cli].send(raw);
+            const client = clients[cli];
+            if (client.enabled && client.readyState === client.OPEN) {
+              client.send(raw);
             }
           }
         } catch (e) {
