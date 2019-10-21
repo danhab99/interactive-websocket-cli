@@ -39,4 +39,18 @@ describe('wscli', function() {
       })
     })
   }) 
+
+  describe('listen', function() {
+    var port = Math.floor(Math.random() * ((2 ** 16) - 3000) + 3000)
+
+    it('can open port', function(done) {
+      var wscli = spawn('node', ['./bin/wscli.js', 'listen', port])
+      setTimeout(() => {
+        assert.ok(true)
+        wscli.kill()
+        done()
+      }, 1000)
+      wscli.on('error', () => assert.fail())
+    }
+  })
 })
