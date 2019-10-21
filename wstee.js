@@ -3,38 +3,38 @@
 const WebSocket = require('ws')
 const EventEmitter = require('events')
 
-const {program, parse} = require('./program')()
+var {program, parse} = require('./program')()
 const Keyboard = require('./keyboard')
 
 program.option('-r, --rebroadcast', "Rebroadcasts every client's message to every other client")
-const mode = parse()
+program = parse()
+
 const kb = new Keyboard(program.tabSize)
 
 const hookup = ws => {
   const duplex = WebSocket.createWebSocketStream(ws, {encoding: 'binary'});
 
-  process.stdin.pipe(duplex)
-  process.stderr.pipe(duplex)
-  duplex.pipe(process.stdout)
+  program.in.pipe(duplex)
+  duplex.pipe(program.out)
 
   ws.on('message', msg => {
     kb.flip(false)
     kb.printWS("" + msg)
   })
 
-  process.stdin.on('data', msg => {
+  program.in.on('data', msg => {
     kb.flip(true)
     kb.printWS("" + msg)
   })
 }
 
-if (mode.mode == 'connect') {
-  var ws = new WebSocket(mode.address)
+if (program.mode == 'connect') {
+  var ws = new WebSocket(program.address)
   hookup(ws)
 }
 
-if (mode.mode == 'listen') {
-  const wss = WebSocket.Server({port: mode.port})
+if (program.mode == 'listen') {
+  const wss = WebSocket.Server({port: program.port})
   const rebroadcast = new EventEmitter()
 
   wss.on('connect', ws => {
