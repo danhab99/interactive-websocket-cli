@@ -3,8 +3,8 @@
 const WebSocket = require('ws')
 const EventEmitter = require('events')
 
-var {program, parse} = require('./program')()
-const Keyboard = require('./keyboard')
+var {program, parse} = require('../components/program')()
+const Keyboard = require('../components/keyboard')
 
 program.option('-r, --rebroadcast', "Rebroadcasts every client's message to every other client")
 program = parse()

@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
-const Server = require('./server')
-const Connect = require('./connect')
+const Server = require('../cli/server')
+const Connect = require('../cli/connect')
 
-var {program, parse} = require('./program')()
+
+var {program, parse} = require('../components/program')()
 program = parse()
 
 if (process.stdin.setRawMode){
