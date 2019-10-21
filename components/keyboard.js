@@ -71,7 +71,7 @@ module.exports = class Keyboard extends EventEmitter {
     this.prompting = true
     this.buffer = ""
     this.header = header
-    process.stderr.write(header + (' <<< ' ? this.outward : ' >>> '))
+    process.stderr.write(header + (this.outward ? ' <<< ' : ' >>> '))
     return new Promise((resolve, reject) => {
       let listen = (str, key) => {
         if (key && key.sequence === '\r') {
