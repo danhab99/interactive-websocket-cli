@@ -53,7 +53,7 @@ module.exports = class Keyboard extends EventEmitter {
       
     }
     finally {
-      process.stdout.write(`\r${Date.now()} ${id != undefined ? `#{id} ` : ""}>>>${typeof(dat) == 'object' || typeof(dat) == 'array'? '\n' : ' '}${JSON.stringify(dat, null, this.tab)}\n`)
+      process.stderr.write(`\r${Date.now()} ${id != undefined ? `#{id} ` : ""}${this.outward ? '<<<' : '>>>'}${typeof(dat) == 'object' || typeof(dat) == 'array'? '\n' : ' '}${JSON.stringify(dat, null, this.tab)}\n`)
     }
   }
 
