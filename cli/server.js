@@ -12,8 +12,8 @@ module.exports = (program) => {
   if (program.pipeStdin) {
     wss.on('connection', ws => {
       var cws = WebSocket.createWebSocketStream(ws)
-      process.stdin.pipe(cws)
-      cws.pipe(process.stdout)
+      program.in.pipe(cws)
+      cws.pipe(program.out)
     })
   } else {
     console.log('!!! Listening')

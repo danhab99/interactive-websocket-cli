@@ -58,7 +58,6 @@ describe('wscli', function() {
     it('can receive a single message', function(done) {
       var server = spawn('node', ['./bin/wscli.js', '-p', 'listen', port])
       var transmit = spawn('node', ['./bin/wscli.js', '-p', 'connect', `ws://localhost:${port}`])
-      var islistening = false
 
       server.stdout.once('data', blok => {
         assert.equal(blok, data)
@@ -68,6 +67,28 @@ describe('wscli', function() {
       })
 
       transmit.stdin.write(data)
+    })
+
+    it('can transmit a single message', function(done) {
+      var server = spawn('node', ['./bin/wscli.js', '-p', 'listen', port])
+      var transmit = spawn('node', ['./bin/wscli.js', '-p', 'connect', `ws://localhost:${port}`])
+      
+      server.on('error', c => {
+        console.error(c)
+      })
+    
+      transmit.stdout.on('data', blok => {
+        blok += ''
+        assert.equal(blok, data)
+        server.kill()
+        transmit.kill()
+        done()
+      })
+
+      setTimeout(() => {
+        server.stdin.write(data)
+      }, 500)
+      
     })
   })
 })
