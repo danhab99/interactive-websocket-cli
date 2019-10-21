@@ -8,7 +8,7 @@
     "iohook": "^0.6.1",
     "linebyline": "^1.3.0",
     "readline": "^1.3.0",
-    "ws": "^7.1.2"
+    "ws": "^7.2.0"
   },
   "devDependencies": {},
   "scripts": {
@@ -31,8 +31,5 @@
   "homepage": "https://github.com/danhab99/ws-cli#readme",
   "bin": {
     "ws-cli": "./index.js"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
   }
 }
