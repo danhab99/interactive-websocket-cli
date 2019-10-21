@@ -31,6 +31,7 @@ Options:
   -t, --tab-size <t>  Set the tab size (default: 2)
   -i, --in <files>    Use files as input (default: [])
   -o, --out <file>    Output to file
+  -u, --ugly          No pretty print
   -h, --help          output usage information
 
 Commands:
@@ -75,6 +76,7 @@ Options:
   -t, --tab-size <t>  Set the tab size (default: 2)
   -i, --in <files>    Use files as input (default: [])
   -o, --out <file>    Output to file
+  -u, --ugly          No pretty print
   -r, --rebroadcast   Rebroadcasts every client's message to every other client
   -h, --help          output usage information
 
