@@ -31,7 +31,7 @@
   },
   "homepage": "https://github.com/danhab99/ws-cli#readme",
   "bin": {
-    "wscli": "./wscli.js",
-    "wstee": "./wstee.js"
+    "wscli": "./bin/wscli.js",
+    "wstee": "./bin/wstee.js"
   }
 }
