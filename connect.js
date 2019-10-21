@@ -14,14 +14,12 @@ module.exports = (program, address) => {
   else {
     // Interactive
     ws.on('open', () => console.log('!!! Connected'))
+    let keyboard = new Keyboard(program.tabSize)
     
     ws.on('message', msg => {
-      // TODO: Make tabsize a setting
-      process.stdout.write(`\r${Date.now()} >>> ${JSON.stringify(msg)}\n`) // TODO: Pretty print
+      keyboard.printWS(msg)
       keyboard.fix_prompt()
     })
-
-    let keyboard = new Keyboard()
 
     keyboard.on('s', () => {
       keyboard.prompt('send').then(raw => {

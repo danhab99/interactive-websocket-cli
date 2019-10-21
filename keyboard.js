@@ -9,10 +9,11 @@ process.stdin.on('keypress', (str, key) => {
 })
 
 module.exports = class Keyboard extends EventEmitter {
-  constructor() {
+  constructor(tabsize) {
     super()
     this.prompting = false
     this.buffer = ""
+    this.tab = tabsize
 
     process.stdin.on('keypress', (str, key) => {
       if (!this.prompting) {
@@ -40,6 +41,18 @@ module.exports = class Keyboard extends EventEmitter {
   fix_prompt() {
     if (this.prompting) {
       process.stdout.write(`\r${this.header} <<< ${this.buffer}`)
+    }
+  }
+
+  printWS(dat, id=undefined) {
+    try {
+      dat = JSON.parse(dat)
+    }
+    catch (e) {
+      
+    }
+    finally {
+      process.stdout.write(`\r${Date.now()} ${id != undefined ? `#{id} ` : ""}>>>${typeof(dat) == 'object' || typeof(dat) == 'array'? '\n' : ' '}${JSON.stringify(dat, null, this.tab)}\n`)
     }
   }
 
