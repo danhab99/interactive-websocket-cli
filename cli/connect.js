@@ -8,8 +8,8 @@ module.exports = (program) => {
   if (program.pipeStdin) {
     // Pipe
     var duplex = WebSocket.createWebSocketStream(ws)
-    process.stdin.pipe(duplex)
-    duplex.pipe(process.stdout)
+    program.in.pipe(duplex)
+    duplex.pipe(program.out)
   }
   else {
     // Interactive
