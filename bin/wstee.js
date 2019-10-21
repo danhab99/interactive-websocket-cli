@@ -9,7 +9,7 @@ const Keyboard = require('../components/keyboard')
 program.option('-r, --rebroadcast', "Rebroadcasts every client's message to every other client")
 program = parse()
 
-const kb = new Keyboard(program.tabSize)
+const kb = new Keyboard(program)
 
 const hookup = ws => {
   const duplex = WebSocket.createWebSocketStream(ws, {encoding: 'binary'});

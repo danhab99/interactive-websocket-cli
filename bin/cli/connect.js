@@ -14,7 +14,7 @@ module.exports = (program) => {
   else {
     // Interactive
     ws.on('open', () => console.log('!!! Connected'))
-    let keyboard = new Keyboard(program.tabSize)
+    var keyboard = new Keyboard(program);
     
     ws.on('message', msg => {
       keyboard.printWS(msg)
