@@ -16,6 +16,7 @@ module.exports = () => {
     .option("-t, --tab-size <t>", "Set the tab size", 2)
     .option("-i, --in <files>", "Use files as input", collect, [])
     .option("-o, --out <file>", "Output to file")
+    .option("-u, --ugly", "No pretty print")
 
   program
     .command("listen <port>")

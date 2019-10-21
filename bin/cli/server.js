@@ -17,7 +17,7 @@ module.exports = (program) => {
     })
   } else {
     console.log('!!! Listening')
-    var keyboard = new Keyboard(program.tabSize);
+    var keyboard = new Keyboard(program);
     var counter = 0;
     var clients = [];
 

@@ -9,12 +9,13 @@ process.stdin.on('keypress', (str, key) => {
 })
 
 module.exports = class Keyboard extends EventEmitter {
-  constructor(tabsize) {
+  constructor(program) {
     super()
     this.prompting = false
     this.buffer = ""
-    this.tab = tabsize
+    this.tab = program.tabSize
     this.outward = true
+    this.ugly = program.ugly
 
     process.stdin.on('keypress', (str, key) => {
       if (!this.prompting) {
@@ -45,7 +46,7 @@ module.exports = class Keyboard extends EventEmitter {
     }
   }
 
-  printWS(dat, id=undefined) {
+  printWS(dat, i=null) {
     try {
       dat = JSON.parse(dat)
     }
@@ -53,7 +54,11 @@ module.exports = class Keyboard extends EventEmitter {
       
     }
     finally {
-      process.stderr.write(`\r${Date.now()} ${id != undefined ? `#{id} ` : ""}${this.outward ? '<<<' : '>>>'}${typeof(dat) == 'object' || typeof(dat) == 'array'? '\n' : ' '}${JSON.stringify(dat, null, this.tab)}\n`)
+      let body = this.ugly ? JSON.stringify(dat) : JSON.stringify(dat, null, this.tab)
+      let id = i != null ? `#${i} ` : ""
+      let arrow = this.outward ? '<<<' : '>>>'
+      let extraspace = typeof(dat) == 'object' && !this.ugly || typeof(dat) == 'array'? '\n' : ' '
+      process.stderr.write(`\r${Date.now()} ${id}${arrow}${extraspace}${body}\n`)
     }
   }
 
