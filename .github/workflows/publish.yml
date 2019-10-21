@@ -1,0 +1,23 @@
+name: Publish
+
+on: [release]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/npm@master
+    - name: npm publish
+    - run: |
+        npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
+        npm publish
+    - name: github publish
+    - run: |
+        npm config set //npm.pkg.github.com/:_authToken=$GITHUB_ACCESS_TOKEN
+        npm publish
+    - env:
+        CI: true
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}  
