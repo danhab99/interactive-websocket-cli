@@ -3,9 +3,9 @@ const { spawn } = require('child_process');
 const fs = require('fs')
 
 describe('wscli', function() {
-  describe('connect', function() {
-    var data = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+  var data = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
 
+  describe('connect', function() {
     it('can transmit a message', function(done) {
       var wscli = spawn('node', ['./bin/wscli.js', '-p', 'connect', 'ws://echo.websocket.org'])
   
@@ -45,12 +45,29 @@ describe('wscli', function() {
 
     it('can open port', function(done) {
       var wscli = spawn('node', ['./bin/wscli.js', 'listen', port])
-      setTimeout(() => {
-        assert.ok(true)
-        wscli.kill()
+      wscli.stdout.on('data', blok => {
+        blok = "" + blok
+        if (blok == '!!! Listening\n') {
+          assert.equal(blok, '!!! Listening\n')
+          wscli.kill()
+          done()
+        }
+      })
+    })
+
+    it('can receive a single message', function(done) {
+      var server = spawn('node', ['./bin/wscli.js', '-p', 'listen', port])
+      var transmit = spawn('node', ['./bin/wscli.js', '-p', 'connect', `ws://localhost:${port}`])
+      var islistening = false
+
+      server.stdout.once('data', blok => {
+        assert.equal(blok, data)
+        server.kill()
+        transmit.kill()
         done()
-      }, 1000)
-      wscli.on('error', () => assert.fail())
-    }
+      })
+
+      transmit.stdin.write(data)
+    })
   })
 })
