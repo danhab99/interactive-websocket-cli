@@ -9,6 +9,7 @@ var mode;
 
 program
   .option('-p, --pipe-stdin', 'Pipe stdin to server and server to stdout')
+  .option('-t, --tab-size <t>', 'Set the tab size', 2)
 
 program.command('listen <port>')
   .description('Listen for websocket connections on a port')
@@ -30,7 +31,7 @@ program.command('connect <address>')
 
 program.parse(process.argv)
 
-if (mode === undefined) {
+if (mode === undefined || typeof(program.tabSize = parseInt(program.tabSize)) != "number") {
   program.help()
   process.exit(1)
 }

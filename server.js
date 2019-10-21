@@ -11,7 +11,7 @@ module.exports = (program, port) => {
     })
   } else {
     console.log('!!! Listening')
-    var keyboard = new Keyboard();
+    var keyboard = new Keyboard(program.tabSize);
     var counter = 0;
     var clients = [];
 
@@ -22,9 +22,7 @@ module.exports = (program, port) => {
       console.log(`!!! Client #${ws.number} connected`);
       ws.on("message", msg => {
         if (ws.enabled) {
-          process.stdout.write(
-            `\r${Date.now()} #${ws.number} >>> ${JSON.stringify(msg)}\n`
-          );
+          keyboard.printWS(msg, ws.number)
           keyboard.fix_prompt();
         }
       });
