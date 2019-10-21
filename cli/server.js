@@ -3,6 +3,12 @@ const Keyboard = require("../components/keyboard");
 
 module.exports = (program) => {
   const wss = new WebSocket.Server({ port: program.port });
+
+  wss.on('error', e => {
+    console.error(e)
+    process.exit(1)
+  })
+
   if (program.pipeStdin) {
     wss.on('connection', ws => {
       var cws = WebSocket.createWebSocketStream(ws)
