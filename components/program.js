@@ -5,7 +5,7 @@ const CombinedStream = require('combined-stream');
 
 
 module.exports = () => {
-  program.version(require("./package.json").version);
+  program.version(require("../package.json").version);
 
   function collect(value, previous) {
     return previous.concat([value]);
