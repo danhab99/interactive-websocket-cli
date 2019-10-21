@@ -1,8 +1,8 @@
 const WebSocket = require("ws");
 const Keyboard = require("./keyboard");
 
-module.exports = (program, port) => {
-  const wss = new WebSocket.Server({ port: port });
+module.exports = (program) => {
+  const wss = new WebSocket.Server({ port: program.port });
   if (program.pipeStdin) {
     wss.on('connection', ws => {
       var cws = WebSocket.createWebSocketStream(ws)
