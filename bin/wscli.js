@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-const Server = require('../cli/server')
-const Connect = require('../cli/connect')
+const Server = require('./cli/server')
+const Connect = require('./cli/connect')
 
 
 var {program, parse} = require('../components/program')()
