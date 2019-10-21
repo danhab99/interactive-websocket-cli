@@ -2,7 +2,7 @@
   "name": "@danhab99/ws-cli",
   "version": "0.0.2",
   "description": "A websocket client for cli",
-  "main": "index.js",
+  "main": "wscli.js",
   "dependencies": {
     "commander": "^3.0.2",
     "iohook": "^0.6.1",
@@ -30,6 +30,6 @@
   },
   "homepage": "https://github.com/danhab99/ws-cli#readme",
   "bin": {
-    "ws-cli": "./index.js"
+    "ws-cli": "./wscli.js"
   }
 }
