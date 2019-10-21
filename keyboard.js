@@ -14,6 +14,7 @@ module.exports = class Keyboard extends EventEmitter {
     this.prompting = false
     this.buffer = ""
     this.tab = tabsize
+    this.outward = true
 
     process.stdin.on('keypress', (str, key) => {
       if (!this.prompting) {
@@ -21,18 +22,18 @@ module.exports = class Keyboard extends EventEmitter {
       }
       else {
         if (key && key.sequence === '\r') {
-          process.stdout.write('\n')
+          process.stderr.write('\n')
           return
         }
         else if (key.name === 'backspace') {
           if (this.buffer.length > 0) {
             this.buffer = this.buffer.slice(0, -1)
-            process.stdout.write('\b \b')
+            process.stderr.write('\b \b')
           }
         }
         else {
           this.buffer += key.sequence
-          process.stdout.write(str)
+          process.stderr.write(str)
         }
       }
     })
@@ -40,7 +41,7 @@ module.exports = class Keyboard extends EventEmitter {
 
   fix_prompt() {
     if (this.prompting) {
-      process.stdout.write(`\r${this.header} <<< ${this.buffer}`)
+      process.stderr.write(`\r${this.header} <<< ${this.buffer}`)
     }
   }
 
@@ -56,12 +57,21 @@ module.exports = class Keyboard extends EventEmitter {
     }
   }
 
+  flip(dir=-1) {
+    if (dir == -1) {
+      this.outward = !this.outward
+    }
+    else {
+      this.outward = dir
+    }
+  }
+
   prompt(header) {
     this.emit('prompting')
     this.prompting = true
     this.buffer = ""
     this.header = header
-    process.stdout.write(header + ' <<< ')
+    process.stderr.write(header + (' <<< ' ? this.outward : ' >>> '))
     return new Promise((resolve, reject) => {
       let listen = (str, key) => {
         if (key && key.sequence === '\r') {
