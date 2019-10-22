@@ -1,17 +1,23 @@
 const WebSocket = require("ws");
-const Keyboard = require("./keyboard");
+const Keyboard = require("../../components/keyboard");
 
-module.exports = (program, port) => {
-  const wss = new WebSocket.Server({ port: port });
+module.exports = (program) => {
+  const wss = new WebSocket.Server({ port: program.port });
+
+  wss.on('error', e => {
+    console.error(e)
+    process.exit(1)
+  })
+
   if (program.pipeStdin) {
     wss.on('connection', ws => {
       var cws = WebSocket.createWebSocketStream(ws)
-      process.stdin.pipe(cws)
-      cws.pipe(process.stdout)
+      program.in.pipe(cws)
+      cws.pipe(program.out)
     })
   } else {
     console.log('!!! Listening')
-    var keyboard = new Keyboard();
+    var keyboard = new Keyboard(program);
     var counter = 0;
     var clients = [];
 
@@ -22,9 +28,7 @@ module.exports = (program, port) => {
       console.log(`!!! Client #${ws.number} connected`);
       ws.on("message", msg => {
         if (ws.enabled) {
-          process.stdout.write(
-            `\r${Date.now()} ${ws._socket.remoteAddress} #${ws.number} >>> ${JSON.stringify(msg)}\n`
-          );
+          keyboard.printWS(msg, ws.number)
           keyboard.fix_prompt();
         }
       });
@@ -64,8 +68,9 @@ module.exports = (program, port) => {
       keyboard.prompt("transmit").then(raw => {
         try {
           for (let cli in clients) {
-            if (clients[cli].enabled) {
-              clients[cli].send(raw);
+            const client = clients[cli];
+            if (client.enabled && client.readyState === client.OPEN) {
+              client.send(raw);
             }
           }
         } catch (e) {
@@ -100,7 +105,7 @@ module.exports = (program, port) => {
 
     keyboard.on("h", () => {
       console.log(`
-    [s] open select prompt
+    [s] open select prompt, used to select which connections are being displayed and will receive transmit messages. comma seperated numbers
     [S] print selected clients
     [t] transmits message to selected clients
     [b] broadcasts message to all clients

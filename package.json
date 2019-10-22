@@ -1,18 +1,20 @@
 {
   "name": "@danhab99/ws-cli",
-  "version": "0.0.2",
+  "version": "1.2.1",
   "description": "A websocket client for cli",
-  "main": "index.js",
+  "main": "wscli.js",
   "dependencies": {
+    "combined-stream": "^1.0.8",
     "commander": "^3.0.2",
     "iohook": "^0.6.1",
     "linebyline": "^1.3.0",
+    "mocha": "^6.2.2",
     "readline": "^1.3.0",
-    "ws": "^7.1.2"
+    "ws": "^7.2.0"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "node --inspect-brk ."
+    "test": "mocha test.js"
   },
   "repository": {
     "type": "git",
@@ -30,9 +32,7 @@
   },
   "homepage": "https://github.com/danhab99/ws-cli#readme",
   "bin": {
-    "ws-cli": "./index.js"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "wscli": "./bin/wscli.js",
+    "wstee": "./bin/wstee.js"
   }
 }
