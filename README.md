@@ -68,19 +68,17 @@ Run `ws-cli listen [port]`, press `h` for help
 `wstee` provides a proxy websocket for monitoring websocket connections. By default it will pipe stdio to the websocket although files can be provided as in/output
 
 ```
-Usage: wstee [options] [command]
+Usage: wstee [options]
 
 Options:
-  -V, --version       output the version number
-  -p, --pipe-stdin    Pipe stdin to server and server to stdout
-  -t, --tab-size <t>  Set the tab size (default: 2)
-  -i, --in <files>    Use files as input (default: [])
-  -o, --out <file>    Output to file
-  -u, --ugly          No pretty print
-  -r, --rebroadcast   Rebroadcasts every client's message to every other client
-  -h, --help          output usage information
-
-Commands:
-  listen <port>       Listen for websocket connections on a port
-  connect <address>   Connect to a websocket at an address
+  -V, --version                         output the version number
+  -p, --pipe-stdin                      Pipe stdin to server and server to stdout
+  -t, --tab-size <t>                    Set the tab size (default: 2)
+  -i, --in <files>                      Use files as input (default: [])
+  -o, --out <file>                      Output to file
+  -u, --ugly                            No pretty print
+  -r, --rebroadcast                     Rebroadcasts every client's message to every other client
+  --connect-incoming <port or address>  Open a port to allow one client to connect (default: [])
+  --connect-outgoing <port or address>  Connect to server  (default: [])
+  -h, --help                            output usage information
 ```

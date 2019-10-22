@@ -3,46 +3,67 @@
 const WebSocket = require('ws')
 const EventEmitter = require('events')
 
-var {program, parse} = require('../components/program')()
-const Keyboard = require('../components/keyboard')
+var {program, parse, help} = require('../components/program')()
+const Keyboard = new (require('../components/keyboard'))(program)
+
+function collect(value, previous) {
+  return previous.concat([value]);
+}
 
 program.option('-r, --rebroadcast', "Rebroadcasts every client's message to every other client")
+program.option('--connect-incoming <port or address>', "Open a port to allow one client to connect", collect, [])
+program.option('--connect-outgoing <port or address>', "Connect to server ", collect, [])
+
 program = parse()
 
-const kb = new Keyboard(program)
-
-const hookup = ws => {
-  const duplex = WebSocket.createWebSocketStream(ws, {encoding: 'binary'});
-
-  program.in.pipe(duplex)
-  duplex.pipe(program.out)
-
-  ws.on('message', msg => {
-    kb.flip(false)
-    kb.printWS("" + msg)
-  })
-
-  program.in.on('data', msg => {
-    kb.flip(true)
-    kb.printWS("" + msg)
-  })
+if (program.connectIncoming.length > 1 && program.connectOutgoing.length > 1) {
+  console.error('Requires atleast 1 --connect-incoming and 1 --connect-outgoing')
+  help()
 }
 
-if (program.mode == 'connect') {
-  var ws = new WebSocket(program.address)
-  hookup(ws)
-}
+const link = arr => {
+  var emit = new EventEmitter()
 
-if (program.mode == 'listen') {
-  const wss = WebSocket.Server({port: program.port})
-  const rebroadcast = new EventEmitter()
+  const hookup = ws => {
+    ws.on('message', msg => {
+      emit.emit('message', msg)
+    })
+    emit.on('send', msg => {
+      ws.send(msg)
+    })
+  }
 
-  wss.on('connect', ws => {
-    hookup(ws)
-
-    if (program.rebroadcast) {
-      rebroadcast.on('message', msg => ws.send(msg))
-      ws.on('message', msg => rebroadcast.emit('message', msg))
+  for (let index = 0; index < arr.length; index++) {
+    const element = arr[index];
+    if (/\w+:(\/?\/?)[^\s]+/.exec(element)) {
+      var ws = new WebSocket(element)
+      hookup(ws)
     }
-  })
+    if (/\d+/.exec(element)) {
+      var port = parseInt(element)
+      var wss = new WebSocket.Server({port: port})
+      console.log(`Listening on port ${port}`)
+      wss.on('connection', ws => {
+        console.log(`Port ${port} received a connection`)
+        hookup(ws)
+      })
+    }
+  }
+  return emit
 }
+
+var incoming = link(program.connectIncoming)
+var outgoing = link(program.connectOutgoing)
+
+incoming.on('message', msg => {
+  Keyboard.flip(true)
+  Keyboard.printWS(msg)
+})
+
+outgoing.on('message', msg => {
+  Keyboard.flip(false)
+  Keyboard.printWS(msg)
+})
+
+incoming.on('message', msg => outgoing.emit('send', msg))
+outgoing.on('message', msg => incoming.emit('send', msg))
