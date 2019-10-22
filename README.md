@@ -9,6 +9,7 @@ An interactive websocket utility suite
       - [As a client](#as-a-client)
       - [As a server](#as-a-server)
     - [wstee](#wstee)
+      - [Note](#note)
 
 ## Installation
 
@@ -82,3 +83,7 @@ Options:
   --connect-outgoing <port or address>  Connect to server  (default: [])
   -h, --help                            output usage information
 ```
+
+#### Note
+
+When using `-p`, `wstee` will instead display the bitrate of data being transfered
