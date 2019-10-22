@@ -9,10 +9,13 @@ process.stdin.on('keypress', (str, key) => {
 })
 
 module.exports = class Keyboard extends EventEmitter {
-  constructor() {
+  constructor(program) {
     super()
     this.prompting = false
     this.buffer = ""
+    this.tab = program.tabSize
+    this.outward = true
+    this.ugly = program.ugly
 
     process.stdin.on('keypress', (str, key) => {
       if (!this.prompting) {
@@ -20,18 +23,18 @@ module.exports = class Keyboard extends EventEmitter {
       }
       else {
         if (key && key.sequence === '\r') {
-          process.stdout.write('\n')
+          process.stderr.write('\n')
           return
         }
         else if (key.name === 'backspace') {
           if (this.buffer.length > 0) {
             this.buffer = this.buffer.slice(0, -1)
-            process.stdout.write('\b \b')
+            process.stderr.write('\b \b')
           }
         }
         else {
           this.buffer += key.sequence
-          process.stdout.write(str)
+          process.stderr.write(str)
         }
       }
     })
@@ -39,7 +42,32 @@ module.exports = class Keyboard extends EventEmitter {
 
   fix_prompt() {
     if (this.prompting) {
-      process.stdout.write(`\r${this.header} <<< ${this.buffer}`)
+      process.stderr.write(`\r${this.header} <<< ${this.buffer}`)
+    }
+  }
+
+  printWS(dat, i=null) {
+    try {
+      dat = JSON.parse(dat)
+    }
+    catch (e) {
+      
+    }
+    finally {
+      let body = this.ugly ? JSON.stringify(dat) : JSON.stringify(dat, null, this.tab)
+      let id = i != null ? `#${i} ` : ""
+      let arrow = !this.outward ? '<<<' : '>>>'
+      let extraspace = typeof(dat) == 'object' && !this.ugly || typeof(dat) == 'array'? '\n' : ' '
+      process.stderr.write(`\r${Date.now()} ${id}${arrow}${extraspace}${body}\n`)
+    }
+  }
+
+  flip(dir=-1) {
+    if (dir == -1) {
+      this.outward = !this.outward
+    }
+    else {
+      this.outward = dir
     }
   }
 
@@ -48,7 +76,7 @@ module.exports = class Keyboard extends EventEmitter {
     this.prompting = true
     this.buffer = ""
     this.header = header
-    process.stdout.write(header + ' <<< ')
+    process.stderr.write(header + (this.outward ? ' <<< ' : ' >>> '))
     return new Promise((resolve, reject) => {
       let listen = (str, key) => {
         if (key && key.sequence === '\r') {
