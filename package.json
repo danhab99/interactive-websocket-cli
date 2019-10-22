@@ -1,6 +1,6 @@
 {
   "name": "@danhab99/ws-cli",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A websocket client for cli",
   "main": "wscli.js",
   "dependencies": {
