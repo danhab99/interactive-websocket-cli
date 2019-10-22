@@ -110,3 +110,23 @@ describe('wscli', function() {
     })
   })
 })
+
+describe('wstee', function() {
+  it('should work', function(done) {
+    var data = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+    var tee = spawn('node', ['./bin/wstee.js', '--connect-incoming', 9000, '--connect-outgoing', 9001])
+    var a = spawn('node', ['./bin/wscli.js', '-p', 'connect', `ws://localhost:9000`])
+    var b = spawn('node', ['./bin/wscli.js', '-p', 'connect', `ws://localhost:9001`])
+    
+    b.stdout.once('data', d => {
+      d += ""
+      // console.log(d)
+      assert.equal(data, d)
+      tee.kill()
+      a.kill()
+      b.kill()
+      done()
+    })
+    a.stdin.write(data)
+  })
+})
