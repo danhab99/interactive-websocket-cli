@@ -56,7 +56,7 @@ module.exports = class Keyboard extends EventEmitter {
     finally {
       let body = this.ugly ? JSON.stringify(dat) : JSON.stringify(dat, null, this.tab)
       let id = i != null ? `#${i} ` : ""
-      let arrow = this.outward ? '<<<' : '>>>'
+      let arrow = !this.outward ? '<<<' : '>>>'
       let extraspace = typeof(dat) == 'object' && !this.ugly || typeof(dat) == 'array'? '\n' : ' '
       process.stderr.write(`\r${Date.now()} ${id}${arrow}${extraspace}${body}\n`)
     }

@@ -18,56 +18,35 @@ module.exports = () => {
     .option("-o, --out <file>", "Output to file")
     .option("-u, --ugly", "No pretty print")
 
-  program
-    .command("listen <port>")
-    .description("Listen for websocket connections on a port")
-    .action(port => {
-      program.mode = "listen"
-      program.port = port
-    });
-
-  program
-    .command("connect <address>")
-    .description("Connect to a websocket at an address")
-    .action(address => {
-      program.mode = "connect"
-      program.address = address
-    });
-
   return {
     program: program,
+    help: () => {
+      program.help();
+      process.exit(1);
+    },
     parse: () => {
       program.parse(process.argv);
 
-      if (
-        program.mode === undefined ||
-        typeof (program.tabSize = parseInt(program.tabSize)) != "number"
-      ) {
-        program.help();
-        process.exit(1);
-      } else {
-
-        if (program.in.length == 0) {
-          program.in = process.stdin
-        }
-        else {
-          var combinedStream = CombinedStream.create();
-          for (let index = 0; index < program.in.length; index++) {
-            const element = program.in[index];
-            combinedStream.append(fs.createReadStream(element))
-          }
-          program.in = combinedStream
-        }
-
-        if (program.out === undefined) {
-          program.out = process.stdout
-        }
-        else {
-          program.out = fs.createWriteStream(program.out)
-        }
-
-        return program
+      if (program.in.length == 0) {
+        program.in = process.stdin
       }
+      else {
+        var combinedStream = CombinedStream.create();
+        for (let index = 0; index < program.in.length; index++) {
+          const element = program.in[index];
+          combinedStream.append(fs.createReadStream(element))
+        }
+        program.in = combinedStream
+      }
+
+      if (program.out === undefined) {
+        program.out = process.stdout
+      }
+      else {
+        program.out = fs.createWriteStream(program.out)
+      }
+
+      return program
     }
   };
 };
