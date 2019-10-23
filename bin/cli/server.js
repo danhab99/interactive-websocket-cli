@@ -97,6 +97,7 @@ module.exports = (program) => {
             for (let cli in clients) {
               if (cli.enabled) {
                 cli.close();
+                delete clients[cli]
               }
             }
           }
