@@ -8,25 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: github-action-tester
-      uses: skx/github-action-tester@release-0.5
-
-    - uses: actions/checkout@v1
-    - uses: actions/npm@master
-
-    - name: set to npm
-      run: npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
-
-    - name: npm publish
-      run: npm publish
-        
-    - name: set to github
-      run: npm config set //npm.pkg.github.com/:_authToken=$GITHUB_ACCESS_TOKEN
-
-    - name: github publish
-      run: npm publish      
-
-    - env:
-        CI: true
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-        GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}  
+    - uses: primer/publish@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+        NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}  
