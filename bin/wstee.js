@@ -48,7 +48,7 @@ const link = arr => {
   for (let index = 0; index < arr.length; index++) {
     const element = arr[index];
     if (/\w+:(\/?\/?)[^\s]+/.exec(element)) {
-      var ws = new WebSocket(element)
+      var ws = new WebSocket(urlfix(element))
       hookup(ws)
     }
     if (/\d+/.exec(element)) {
