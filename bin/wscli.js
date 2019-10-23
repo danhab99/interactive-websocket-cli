@@ -2,7 +2,7 @@
 
 const Server = require('./cli/server')
 const Connect = require('./cli/connect')
-
+const urlfix = require('../components/urlfix')
 
 var {program, parse} = require('../components/program')()
 program
@@ -18,7 +18,7 @@ program
   .description("Connect to a websocket at an address")
   .action(address => {
     program.mode = "connect"
-    program.address = address
+    program.address = urlfix(address)
   });
 
 program = parse()
