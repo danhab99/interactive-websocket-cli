@@ -10,7 +10,7 @@ program
   .description("Listen for websocket connections on a port")
   .action(port => {
     program.mode = "listen"
-    program.port = port
+    program.port = parseInt(port)
   });
 
 program
