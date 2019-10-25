@@ -2,16 +2,50 @@ var assert = require('assert');
 const { spawn } = require('child_process');
 const fs = require('fs')
 
+function connectTo (host, ...flags) {
+  var wscli = spawn('node', ['./bin/wscli.js', '-p', ...flags, 'connect', host])
+  wscli.on('error', c => {
+    assert.throws(c)
+  })
+  wscli.stderr.pipe(process.stderr)
+  return wscli
+}
+
+function listenTo(port, ...flags) {
+  var wscli = spawn('node', ['./bin/wscli.js', '-p', ...flags, 'listen', port])
+  wscli.on('error', c => {
+    assert.throws(c)
+  })
+  wscli.stderr.pipe(process.stderr)
+  return wscli
+}
+
+function randData(reps=10) {
+  var data = ''
+  for (let i = 0; i < reps; i++) {
+    data += Math.random().toString(36).substring(2, 15)   
+  }
+  return data
+}
+
+var porthist = []
+var getport = () => {
+  let p = Math.floor(Math.random() * ((2 ** 16) - 3000) + 3000)
+  if (p in porthist) {
+    return getport()
+  }
+  else {
+    porthist.push(p)
+    return p
+  }
+}
+
 describe('wscli', function() {
-  var data = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+  var data = randData()
 
   describe('connect', function() {
     it('can transmit a message', function(done) {
-      var wscli = spawn('node', ['./bin/wscli.js', '-p', 'connect', 'ws://echo.websocket.org'])
-  
-      wscli.on('error', e => {
-        assert.throws(e)
-      })
+      var wscli = connectTo('ws://echo.websocket.org')
   
       wscli.stdout.once('data', blok => {
         assert.equal(blok, data)
@@ -29,7 +63,7 @@ describe('wscli', function() {
           return
         }
   
-        var wscli = spawn('node', ['./bin/wscli.js', '-p', '--in', './.seed', 'connect', 'ws://echo.websocket.org'])
+        var wscli = connectTo('ws://echo.websocket.org', '--in', './.seed')
   
         wscli.stdout.once('data', blok => {
           assert.equal(blok, data)
@@ -41,10 +75,9 @@ describe('wscli', function() {
   }) 
 
   describe('listen', function() {
-    var port = Math.floor(Math.random() * ((2 ** 16) - 3000) + 3000)
-
+    
     it('can open port', function(done) {
-      var wscli = spawn('node', ['./bin/wscli.js', 'listen', port])
+      var wscli = spawn('node', ['./bin/wscli.js', 'listen', getport()])
       wscli.stdout.on('data', blok => {
         blok = "" + blok
         if (blok == '!!! Listening\n') {
@@ -56,8 +89,9 @@ describe('wscli', function() {
     })
 
     it('can receive a single message', function(done) {
-      var server = spawn('node', ['./bin/wscli.js', '-p', 'listen', port])
-      var transmit = spawn('node', ['./bin/wscli.js', '-p', 'connect', `ws://localhost:${port}`])
+      var port = getport()
+      var server = listenTo(port)
+      var transmit = connectTo(port)
 
       server.stdout.once('data', blok => {
         assert.equal(blok, data)
@@ -70,13 +104,10 @@ describe('wscli', function() {
     })
 
     it('can transmit a single message', function(done) {
-      var server = spawn('node', ['./bin/wscli.js', '-p', 'listen', port])
-      var transmit = spawn('node', ['./bin/wscli.js', '-p', 'connect', `ws://localhost:${port}`])
-      
-      server.on('error', c => {
-        console.error(c)
-      })
-    
+      var port = getport()
+      var server = listenTo(port)
+      var transmit = connectTo(port)
+          
       transmit.stdout.on('data', blok => {
         blok += ''
         assert.equal(blok, data)
@@ -91,12 +122,11 @@ describe('wscli', function() {
     })
       
     it('can transmit message to broken client', function(done) {
-      var server = spawn('node', ['./bin/wscli.js', '-p', 'listen', port])
-      var transmit = spawn('node', ['./bin/wscli.js', '-p', 'connect', `ws://localhost:${port}`])
+      var port = getport()
+      var server = listenTo(port)
+      var transmit = connectTo(port)
+
       transmit.kill()
-      server.on('error', c => {
-        console.error(c)
-      })
     
       setTimeout(() => {
         assert.ok(true)
@@ -113,10 +143,12 @@ describe('wscli', function() {
 
 describe('wstee', function() {
   it('should work', function(done) {
-    var data = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
-    var tee = spawn('node', ['./bin/wstee.js', '--connect-incoming', 9000, '--connect-outgoing', 9001])
-    var a = spawn('node', ['./bin/wscli.js', '-p', 'connect', 9000])
-    var b = spawn('node', ['./bin/wscli.js', '-p', 'connect', 9001])
+    var data = randData()
+    var iport = getport()
+    var oport = getport()
+    var tee = spawn('node', ['./bin/wstee.js', '--connect-incoming', iport, '--connect-outgoing', oport])
+    var a = connectTo(iport)
+    var b = connectTo(oport)
     
     b.stdout.once('data', d => {
       d += ""
