@@ -52,7 +52,7 @@ const link = arr => {
     }
     if (/\d+/.exec(element)) {
       var port = parseInt(element)
-      var wss = new WebSocket.Server(Object.assign({ port: program.port }, process.serverConfig))
+      var wss = new WebSocket.Server(Object.assign({ port: program.port }, program.serverConfig))
       console.log(`Listening on port ${port}`)
       wss.on('connection', ws => {
         console.log(`Port ${port} received a connection`)
