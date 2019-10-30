@@ -12,7 +12,7 @@ module.exports = () => {
   }
 
   program
-    .option("-p, --pipe-stdin", "Pipe stdin to server and server to stdout")
+    .option("-p, --pipe", "Pipe stdin to server and server to stdout")
     .option("-t, --tab-size <t>", "Set the tab size", 2)
     .option("-i, --in <files>", "Use files as input", collect, [])
     .option("-o, --out <file>", "Output to file")

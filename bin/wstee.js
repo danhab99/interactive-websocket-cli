@@ -67,19 +67,17 @@ const link = arr => {
 var incoming = link(program.connectIncoming)
 var outgoing = link(program.connectOutgoing)
 
-incoming.on('message', msg => {
-  if (!program.pipeStdin) {
-    Keyboard.flip(true)
-    Keyboard.printWS(msg)
-  }
-})
+if (!program.pipe) {
+  incoming.on("message", msg => {
+    Keyboard.flip(true);
+    Keyboard.printWS(msg);
+  });
 
-outgoing.on('message', msg => {
-  if (!program.pipeStdin) {
-    Keyboard.flip(false)
-    Keyboard.printWS(msg)
-  }
-})
+  outgoing.on("message", msg => {
+    Keyboard.flip(false);
+    Keyboard.printWS(msg);
+  });
+}
 
 incoming.on('message', msg => outgoing.emit('send', msg))
 outgoing.on('message', msg => incoming.emit('send', msg))
