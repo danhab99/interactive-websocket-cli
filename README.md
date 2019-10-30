@@ -39,6 +39,7 @@ Options:
   -i, --in <files>                       Use files as input (default: [])
   -o, --out <file>                       Output to file
   -u, --ugly                             No pretty print
+  -d, --time-format <format>             Set the timestamp format (default: "YYYY/MM/DD HH:mm:ss(SSS[ms])")
   --server-config <file or JSON string>  Use a JSON object for any websocket server options
   --client-config <file or JSON string>  Use a JSON object for any websocket client options
   -h, --help                             output usage information
@@ -53,6 +54,7 @@ Notes:
   * Enabling ugly print (--ugly) will ignore --tab-size
   * Adress will be completed (ex. echo.websocket.org => ws://echo.websocket.org, 9000 => ws://localhost:9000)
   * --server-config and --client-config expect a JSON string conforming to https://github.com/websockets/ws/blob/HEAD/doc/ws.md#new-websocketaddress-protocols-options
+  * --time-format strings are based off of https://momentjs.com/
 ```
 
 #### As a client
@@ -93,6 +95,7 @@ Options:
   -i, --in <files>                       Use files as input (default: [])
   -o, --out <file>                       Output to file
   -u, --ugly                             No pretty print
+  -d, --time-format <format>             Set the timestamp format (default: "YYYY/MM/DD HH:mm:ss(SSS[ms])")
   --server-config <file or JSON string>  Use a JSON object for any websocket server options
   --client-config <file or JSON string>  Use a JSON object for any websocket client options
   --connect-incoming <port or address>   Open a port to allow one client to connect (default: [])
@@ -105,6 +108,7 @@ Notes:
   * Enabling ugly print (--ugly) will ignore --tab-size
   * Adress will be completed (ex. echo.websocket.org => ws://echo.websocket.org, 9000 => ws://localhost:9000)
   * --server-config and --client-config expect a JSON string conforming to https://github.com/websockets/ws/blob/HEAD/doc/ws.md#new-websocketaddress-protocols-options
+  * --time-format strings are based off of https://momentjs.com/
 ```
 
 #### Note
