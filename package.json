@@ -12,7 +12,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "mocha --exit test.js"
+    "test": "mocha --exit --inspect-brk test.js"
   },
   "repository": {
     "type": "git",

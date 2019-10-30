@@ -3,9 +3,20 @@ const fs = require('fs')
 const CombinedStream = require('combined-stream');
 
 
-
 module.exports = () => {
   program.version(require("../package.json").version);
+
+
+  program.on('--help', () => {
+    console.log(`
+Notes: 
+  * Pipe (-p) must be enabled when using file inputs (--in)
+  * Specifying multiple --in(s) will chain together each the files and feed them through one at a time
+  * Enabling ugly print (--ugly) will ignore --tab-size
+  * Adress will be completed (ex. echo.websocket.org => ws://echo.websocket.org, 9000 => ws://localhost:9000)
+  * --server-config and --client-config expect a JSON string conforming to https://github.com/websockets/ws/blob/HEAD/doc/ws.md#new-websocketaddress-protocols-options
+    `)
+  })
 
   function collect(value, previous) {
     return previous.concat([value]);
@@ -19,6 +30,7 @@ module.exports = () => {
     .option("-u, --ugly", "No pretty print")
     .option("--server-config <file or JSON string>", "Use a JSON object for any websocket server options")
     .option("--client-config <file or JSON string>", "Use a JSON object for any websocket client options")
+
 
   return {
     program: program,
@@ -46,6 +58,34 @@ module.exports = () => {
       }
       else {
         program.out = fs.createWriteStream(program.out)
+      }
+
+      if (program.serverConfig) {
+        try {
+          program.serverConfig = JSON.parse(program.serverConfig)
+        }
+        catch (e) {
+          try {
+            program.serverConfig = JSON.parse(fs.readFileSync(program.serverConfig))
+          }
+          catch (e) {
+            console.warn('Unable to understand --server-config, ignoring')
+          }
+        }
+      }
+
+      if (program.clientConfig) {
+        try {
+          program.clientConfig = JSON.parse(program.clientConfig)
+        }
+        catch (e) {
+          try {
+            program.clientConfig = JSON.parse(fs.readFileSync(program.clientConfig))
+          }
+          catch (e) {
+            console.warn('Unable to understand --client-config, ignoring')
+          }
+        }
       }
 
       return program
