@@ -17,6 +17,8 @@ module.exports = () => {
     .option("-i, --in <files>", "Use files as input", collect, [])
     .option("-o, --out <file>", "Output to file")
     .option("-u, --ugly", "No pretty print")
+    .option("--server-config <file or JSON string>", "Use a JSON object for any websocket server options")
+    .option("--client-config <file or JSON string>", "Use a JSON object for any websocket client options")
 
   return {
     program: program,

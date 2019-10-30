@@ -2,7 +2,7 @@ const WebSocket = require('ws');
 const Keyboard = require('../../components/keyboard')
 
 module.exports = (program) => {
-  const ws = new WebSocket(program.address)
+  const ws = new WebSocket(program.address, program.clientConfig)
   ws.on('close', () => process.exit(1))
   
   ws.on('open', () => {
@@ -14,7 +14,7 @@ module.exports = (program) => {
     }
     else {
       // Interactive
-      ws.on('open', () => console.log('!!! Connected'))
+      console.log('!!! Connected')
       var keyboard = new Keyboard(program);
       
       ws.on('message', msg => {
