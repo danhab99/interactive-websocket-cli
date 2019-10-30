@@ -1,5 +1,7 @@
 const readline = require('readline');
 var EventEmitter = require('events').EventEmitter
+var moment = require('moment');
+
 readline.emitKeypressEvents(process.stdin);
 
 process.stdin.on('keypress', (str, key) => {
@@ -16,6 +18,7 @@ module.exports = class Keyboard extends EventEmitter {
     this.tab = program.tabSize
     this.outward = true
     this.ugly = program.ugly
+    this.t = program.timeFormat
 
     process.stdin.on('keypress', (str, key) => {
       if (!this.prompting) {
@@ -58,7 +61,8 @@ module.exports = class Keyboard extends EventEmitter {
       let id = i != null ? `#${i} ` : ""
       let arrow = !this.outward ? '<<<' : '>>>'
       let extraspace = typeof(dat) == 'object' && !this.ugly || typeof(dat) == 'array'? '\n' : ' '
-      process.stderr.write(`\r${Date.now()} ${id}${arrow}${extraspace}${body}\n`)
+      let time = moment().format(this.t)
+      process.stderr.write(`\r${time} ${id}${arrow}${extraspace}${body}\n`)
     }
   }
 

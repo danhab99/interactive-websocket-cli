@@ -15,6 +15,7 @@ Notes:
   * Enabling ugly print (--ugly) will ignore --tab-size
   * Adress will be completed (ex. echo.websocket.org => ws://echo.websocket.org, 9000 => ws://localhost:9000)
   * --server-config and --client-config expect a JSON string conforming to https://github.com/websockets/ws/blob/HEAD/doc/ws.md#new-websocketaddress-protocols-options
+  * --time-format strings are based off of https://momentjs.com/
     `)
   })
 
@@ -28,6 +29,7 @@ Notes:
     .option("-i, --in <files>", "Use files as input", collect, [])
     .option("-o, --out <file>", "Output to file")
     .option("-u, --ugly", "No pretty print")
+    .option("-d, --time-format <format>", "Set the timestamp format", "YYYY/MM/DD HH:mm:ss(SSS[ms])")
     .option("--server-config <file or JSON string>", "Use a JSON object for any websocket server options")
     .option("--client-config <file or JSON string>", "Use a JSON object for any websocket client options")
 
