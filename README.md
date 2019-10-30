@@ -34,7 +34,7 @@ Usage: wscli [options] [command]
 
 Options:
   -V, --version       output the version number
-  -p, --pipe-stdin    Pipe stdin to server and server to stdout
+  -p, --pipe          Pipe stdin to server and server to stdout
   -t, --tab-size <t>  Set the tab size (default: 2)
   -i, --in <files>    Use files as input (default: [])
   -o, --out <file>    Output to file
@@ -79,7 +79,7 @@ Usage: wstee [options]
 
 Options:
   -V, --version                         output the version number
-  -p, --pipe-stdin                      Pipe stdin to server and server to stdout
+  -p, --pipe                            Pipe stdin to server and server to stdout
   -t, --tab-size <t>                    Set the tab size (default: 2)
   -i, --in <files>                      Use files as input (default: [])
   -o, --out <file>                      Output to file

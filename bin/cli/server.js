@@ -9,7 +9,7 @@ module.exports = (program) => {
     process.exit(1)
   })
 
-  if (program.pipeStdin) {
+  if (program.pipe) {
     wss.on('connection', ws => {
       var cws = WebSocket.createWebSocketStream(ws)
       program.in.pipe(cws)
