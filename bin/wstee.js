@@ -12,7 +12,6 @@ function collect(value, previous) {
   return previous.concat([value]);
 }
 
-program.option('-r, --rebroadcast', "Rebroadcasts every client's message to every other client")
 program.option('--connect-incoming <port or address>', "Open a port to allow one client to connect", collect, [])
 program.option('--connect-outgoing <port or address>', "Connect to server ", collect, [])
 
@@ -48,12 +47,12 @@ const link = arr => {
   for (let index = 0; index < arr.length; index++) {
     const element = arr[index];
     if (/\w+:(\/?\/?)[^\s]+/.exec(element)) {
-      var ws = new WebSocket(urlfix(element))
+      var ws = new WebSocket(urlfix(element), program.clientConfig)
       hookup(ws)
     }
     if (/\d+/.exec(element)) {
       var port = parseInt(element)
-      var wss = new WebSocket.Server({port: port})
+      var wss = new WebSocket.Server(Object.assign({ port: program.port }, process.serverConfig))
       console.log(`Listening on port ${port}`)
       wss.on('connection', ws => {
         console.log(`Port ${port} received a connection`)

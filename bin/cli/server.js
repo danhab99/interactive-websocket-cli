@@ -2,7 +2,7 @@ const WebSocket = require("ws");
 const Keyboard = require("../../components/keyboard");
 
 module.exports = (program) => {
-  const wss = new WebSocket.Server({ port: program.port });
+  const wss = new WebSocket.Server(Object.assign({ port: program.port }, process.serverConfig));
 
   wss.on('error', e => {
     console.error(e)
