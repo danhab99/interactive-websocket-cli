@@ -23,6 +23,11 @@ program
 
 program = parse()
 
+if (program.mode == undefined) {
+  console.error("You need to select a mode (connect, listen)")
+  program.help()
+}
+
 if (process.stdin.setRawMode){
   process.stdin.setRawMode(true);
 }
