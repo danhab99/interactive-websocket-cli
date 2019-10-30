@@ -33,17 +33,26 @@ wscli provides an interactive websocket client/server
 Usage: wscli [options] [command]
 
 Options:
-  -V, --version       output the version number
-  -p, --pipe          Pipe stdin to server and server to stdout
-  -t, --tab-size <t>  Set the tab size (default: 2)
-  -i, --in <files>    Use files as input (default: [])
-  -o, --out <file>    Output to file
-  -u, --ugly          No pretty print
-  -h, --help          output usage information
+  -V, --version                          output the version number
+  -p, --pipe                             Pipe stdin to server and server to stdout
+  -t, --tab-size <t>                     Set the tab size (default: 2)
+  -i, --in <files>                       Use files as input (default: [])
+  -o, --out <file>                       Output to file
+  -u, --ugly                             No pretty print
+  --server-config <file or JSON string>  Use a JSON object for any websocket server options
+  --client-config <file or JSON string>  Use a JSON object for any websocket client options
+  -h, --help                             output usage information
 
 Commands:
-  listen <port>       Listen for websocket connections on a port
-  connect <address>   Connect to a websocket at an address
+  listen <port>                          Listen for websocket connections on a port
+  connect <address>                      Connect to a websocket at an address
+
+Notes: 
+  * Pipe (-p) must be enabled when using file inputs (--in)
+  * Specifying multiple --in(s) will chain together each the files and feed them through one at a time
+  * Enabling ugly print (--ugly) will ignore --tab-size
+  * Adress will be completed (ex. echo.websocket.org => ws://echo.websocket.org, 9000 => ws://localhost:9000)
+  * --server-config and --client-config expect a JSON string conforming to https://github.com/websockets/ws/blob/HEAD/doc/ws.md#new-websocketaddress-protocols-options
 ```
 
 #### As a client
@@ -78,16 +87,24 @@ Run `ws-cli listen [port]`, press `h` for help
 Usage: wstee [options]
 
 Options:
-  -V, --version                         output the version number
-  -p, --pipe                            Pipe stdin to server and server to stdout
-  -t, --tab-size <t>                    Set the tab size (default: 2)
-  -i, --in <files>                      Use files as input (default: [])
-  -o, --out <file>                      Output to file
-  -u, --ugly                            No pretty print
-  -r, --rebroadcast                     Rebroadcasts every client's message to every other client
-  --connect-incoming <port or address>  Open a port to allow one client to connect (default: [])
-  --connect-outgoing <port or address>  Connect to server  (default: [])
-  -h, --help                            output usage information
+  -V, --version                          output the version number
+  -p, --pipe                             Pipe stdin to server and server to stdout
+  -t, --tab-size <t>                     Set the tab size (default: 2)
+  -i, --in <files>                       Use files as input (default: [])
+  -o, --out <file>                       Output to file
+  -u, --ugly                             No pretty print
+  --server-config <file or JSON string>  Use a JSON object for any websocket server options
+  --client-config <file or JSON string>  Use a JSON object for any websocket client options
+  --connect-incoming <port or address>   Open a port to allow one client to connect (default: [])
+  --connect-outgoing <port or address>   Connect to server  (default: [])
+  -h, --help                             output usage information
+
+Notes: 
+  * Pipe (-p) must be enabled when using file inputs (--in)
+  * Specifying multiple --in(s) will chain together each the files and feed them through one at a time
+  * Enabling ugly print (--ugly) will ignore --tab-size
+  * Adress will be completed (ex. echo.websocket.org => ws://echo.websocket.org, 9000 => ws://localhost:9000)
+  * --server-config and --client-config expect a JSON string conforming to https://github.com/websockets/ws/blob/HEAD/doc/ws.md#new-websocketaddress-protocols-options
 ```
 
 #### Note
