@@ -1,14 +1,14 @@
-# ws-cli
+# [I]nteractive [W]eb[s]ocket [C]ommand [L]ine [I]nterface
 
-[![npm](https://img.shields.io/npm/v/@danhab99/ws-cli)](https://www.npmjs.com/package/@danhab99/ws-cli)
-[![GitHub forks](https://img.shields.io/github/forks/danhab99/ws-cli)](https://github.com/danhab99/ws-cli)
-[![GitHub Release Date](https://img.shields.io/github/release-date/danhab99/ws-cli) ![github](https://img.shields.io/github/v/release/danhab99/ws-cli)](https://github.com/danhab99/ws-cli/releases)
-[![npm](https://img.shields.io/npm/dw/@danhab99/ws-cli)](https://www.npmjs.com/package/@danhab99/ws-cli)
-[![stars](https://img.shields.io/github/stars/danhab99/ws-cli)](https://github.com/danhab99/ws-cli)
+[![npm](https://img.shields.io/npm/v/@danhab99/interactive-websocket-cli)](https://www.npmjs.com/package/@danhab99/interactive-websocket-cli)
+[![GitHub forks](https://img.shields.io/github/forks/danhab99/interactive-websocket-cli)](https://github.com/danhab99/interactive-websocket-cli)
+[![GitHub Release Date](https://img.shields.io/github/release-date/danhab99/interactive-websocket-cli) ![github](https://img.shields.io/github/v/release/danhab99/interactive-websocket-cli)](https://github.com/danhab99/interactive-websocket-cli/releases)
+[![npm](https://img.shields.io/npm/dw/@danhab99/interactive-websocket-cli)](https://www.npmjs.com/package/@danhab99/interactive-websocket-cli)
+[![stars](https://img.shields.io/github/stars/danhab99/interactive-websocket-cli)](https://github.com/danhab99/interactive-websocket-cli)
 
 An interactive websocket utility suite
 
-- [ws-cli](#ws-cli)
+- [[I]nteractive [W]eb[s]ocket [C]ommand [L]ine [I]nterface](#interactive-websocket-command-line-interface)
   - [Installation](#installation)
   - [Usage](#usage)
     - [wscli](#wscli)
@@ -20,7 +20,7 @@ An interactive websocket utility suite
 ## Installation
 
 ```bash
-npm i -g @danhab99/ws-cli
+npm i -g @danhab99/interactive-websocket-cli
 ```
 
 ## Usage
@@ -59,7 +59,7 @@ Notes:
 
 #### As a client
 
-Run `ws-cli connect [host]`. Once you see the `!!! Connected` message, press `h` for help, all further commands are triggered by the correct keypress.
+Run `wscli connect [host]`. Once you see the `!!! Connected` message, press `h` for help, all further commands are triggered by the correct keypress.
 
 ```
 
@@ -69,7 +69,7 @@ Run `ws-cli connect [host]`. Once you see the `!!! Connected` message, press `h`
 
 #### As a server
 
-Run `ws-cli listen [port]`, press `h` for help
+Run `wscli listen [port]`, press `h` for help
 
 ```
 

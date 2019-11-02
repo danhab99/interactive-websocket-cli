@@ -1,5 +1,5 @@
 {
-  "name": "@danhab99/ws-cli",
+  "name": "interactive-websocket-cli",
   "version": "1.4.2",
   "description": "A websocket client for cli",
   "main": "wscli.js",
@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/danhab99/ws-cli.git"
+    "url": "git+https://github.com/danhab99/iwscli.git"
   },
   "keywords": [
     "websockets",
@@ -31,9 +31,9 @@
   "author": "Dan Habot <dan.habot@gmail.com> (danhab99)",
   "license": "GPL-3.0-or-later",
   "bugs": {
-    "url": "https://github.com/danhab99/ws-cli/issues"
+    "url": "https://github.com/danhab99/iwscli/issues"
   },
-  "homepage": "https://github.com/danhab99/ws-cli#readme",
+  "homepage": "https://github.com/danhab99/iwscli#readme",
   "bin": {
     "wscli": "./bin/wscli.js",
     "wstee": "./bin/wstee.js"
