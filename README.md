@@ -1,9 +1,9 @@
 # [I]nteractive [W]eb[s]ocket [C]ommand [L]ine [I]nterface
 
-[![npm](https://img.shields.io/npm/v/@danhab99/interactive-websocket-cli)](https://www.npmjs.com/package/@danhab99/interactive-websocket-cli)
+[![npm](https://img.shields.io/npm/v/interactive-websocket-cli)](https://www.npmjs.com/package/interactive-websocket-cli)
 [![GitHub forks](https://img.shields.io/github/forks/danhab99/interactive-websocket-cli)](https://github.com/danhab99/interactive-websocket-cli)
 [![GitHub Release Date](https://img.shields.io/github/release-date/danhab99/interactive-websocket-cli) ![github](https://img.shields.io/github/v/release/danhab99/interactive-websocket-cli)](https://github.com/danhab99/interactive-websocket-cli/releases)
-[![npm](https://img.shields.io/npm/dw/@danhab99/interactive-websocket-cli)](https://www.npmjs.com/package/@danhab99/interactive-websocket-cli)
+[![npm](https://img.shields.io/npm/dw/interactive-websocket-cli)](https://www.npmjs.com/package/interactive-websocket-cli)
 [![stars](https://img.shields.io/github/stars/danhab99/interactive-websocket-cli)](https://github.com/danhab99/interactive-websocket-cli)
 
 An interactive websocket utility suite
@@ -20,7 +20,7 @@ An interactive websocket utility suite
 ## Installation
 
 ```bash
-npm i -g @danhab99/interactive-websocket-cli
+npm i -g interactive-websocket-cli
 ```
 
 ## Usage
