@@ -4,11 +4,11 @@ var moment = require('moment');
 
 readline.emitKeypressEvents(process.stdin);
 
-process.stdin.on('keypress', (str, key) => {
+/* process.stdin.on('keypress', (str, key) => {
   if (key.sequence === '\u0003') {
     process.exit();
   }
-})
+}) */
 
 module.exports = class Keyboard extends EventEmitter {
   constructor(program) {
@@ -21,6 +21,10 @@ module.exports = class Keyboard extends EventEmitter {
     this.t = program.timeFormat
 
     process.stdin.on('keypress', (str, key) => {
+      if (key.sequence === '\u0003') {
+        process.exit();
+      }
+
       if (!this.prompting) {
         this.emit(str)
       }

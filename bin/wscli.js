@@ -30,9 +30,8 @@ if (program.mode == undefined) {
 
 if (process.stdin.setRawMode){
   process.stdin.setRawMode(true);
+  process.stdin.resume();
 }
-
-process.stdin.resume();
 
 if (program.mode == 'listen') {
   Server(program)
