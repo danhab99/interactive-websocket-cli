@@ -28,17 +28,8 @@ function randData(reps=10) {
   return data
 }
 
-var porthist = []
-var getport = () => {
-  let p = Math.floor(Math.random() * ((2 ** 16) - 3000) + 3000)
-  if (p in porthist) {
-    return getport()
-  }
-  else {
-    porthist.push(p)
-    return p
-  }
-}
+var portc = 43562
+var getport = () => portc++
 
 describe('wscli', function() {
   var data = randData()
