@@ -4,9 +4,11 @@ const Server = require('./cli/server')
 const Connect = require('./cli/connect')
 const urlfix = require('../components/urlfix')
 
-var {program, parse} = require('../components/program')()
-program
+var {program, parse, help} = require('../components/program')()
+
+const plisten = program
   .command("listen <port>")
+  .option('-q, --quiet', 'Disable client outputs on connection', false)
   .description("Listen for websocket connections on a port")
   .action(port => {
     program.mode = "listen"
@@ -24,8 +26,7 @@ program
 program = parse()
 
 if (program.mode == undefined) {
-  console.error("You need to select a mode (connect, listen)")
-  program.help()
+  help()
 }
 
 if (process.stdin.setRawMode){

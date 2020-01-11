@@ -69,6 +69,18 @@ Run `wscli connect [host]`. Once you see the `!!! Connected` message, press `h` 
 
 #### As a server
 
+Server has special arguments
+
+```bash
+Usage: wscli listen [options] <port>
+
+Listen for websocket connections on a port
+
+Options:
+  -q, --quiet  Disable client outputs on connection (default: false)
+  -h, --help   output usage information
+```
+
 Run `wscli listen [port]`, press `h` for help
 
 ```
