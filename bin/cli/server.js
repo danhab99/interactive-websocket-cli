@@ -1,5 +1,7 @@
 const WebSocket = require("ws");
 const Keyboard = require("../../components/keyboard");
+const _ = require('lodash')
+const write = (...msg) => process.stdout.write(...msg)
 
 module.exports = (program) => {
   const wss = new WebSocket.Server(Object.assign({ port: program.port }, process.serverConfig));
@@ -16,52 +18,64 @@ module.exports = (program) => {
       cws.pipe(program.out)
     })
   } else {
-    console.log('!!! Listening')
+    const announce = (msg, ...args) => console.log('!!! ' + msg, ...args)
+    announce('Listening')
     var keyboard = new Keyboard(program);
-    var counter = 0;
     var clients = [];
 
-    wss.on("connection", ws => {
+    wss.on("connection", (ws, req) => {
       clients.push(ws);
       ws.enabled = !program.quiet;
-      ws.number = counter++;
-      console.log(`!!! Client #${ws.number} connected`);
+      ws.id = `${req.connection.remoteAddress}:${req.connection.remotePort}`
+
+      announce(`Client @ ${ws.id} connected`);
+
       ws.on("message", msg => {
         if (ws.enabled) {
-          keyboard.printWS(msg, ws.number)
+          keyboard.printWS(msg, ws.id)
           keyboard.fix_prompt();
         }
       });
+
+      ws.on("close", () => {
+        announce(`${ws.id} closed`)
+        _.remove(clients, x => x.id == ws.id)
+      })
     });
 
     keyboard.on("s", () => {
       keyboard.prompt("select").then(raw => {
-        if (raw != "") {
-          let s = raw.split(",");
-          for (let index = 0; index < clients.length; index++) {
-            clients[index].enabled = false;
-          }
-          for (let index = 0; index < s.length; index++) {
-            i = parseInt(s[index]);
-            clients[i].enabled = true;
-          }
+        var selected = _.split(raw, /,\s\|/)
+        var ids = _.map(clients, x => x.id)
+        selected = _.intersection(selected, ids)
+        if (selected.length <= 0) {
+          return
         }
+        
+        var enable = _.filter(clients, n => _.includes(selected, n.id))
+        var disabled = _.without(clients, ...enable)
+
+        _.each(enable, n => n.enabled = true)
+        _.each(disabled, n => n.enabled = false)
       });
     });
 
     keyboard.on("l", () => {
-      console.log(`CLIENTS: ${JSON.stringify(clients)}`);
+      // console.log(`CLIENTS: ${JSON.stringify(clients)}`);
+      write('CLIENTS ')
+      _.each(clients, x => {
+        write(`| ${x.id}`)
+      });
+      write('\n')
     });
 
     keyboard.on("S", () => {
-      process.stdout.write("SELECTED: ");
-      for (let index = 0; index < clients.length; index++) {
-        const element = clients[index];
-        if (element.enabled) {
-          process.stdout.write(index.toString() + ", ");
-        }
-      }
-      process.stdout.write("\n");
+      write("SELECTED: ");
+
+      var enabled = _.filter(clients, n => n.enabled)
+      _.each(enabled, n => write(`| ${n.id}`))
+
+      write("\n");
     });
 
     keyboard.on("t", () => {
