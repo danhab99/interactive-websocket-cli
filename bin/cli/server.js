@@ -1,5 +1,6 @@
 const WebSocket = require("ws");
 const Keyboard = require("../../components/keyboard");
+const wsid = require('../../components/wsid')
 const _ = require('lodash')
 const write = (...msg) => process.stdout.write(...msg)
 
@@ -26,7 +27,7 @@ module.exports = (program) => {
     wss.on("connection", (ws, req) => {
       clients.push(ws);
       ws.enabled = !program.quiet;
-      ws.id = `${req.connection.remoteAddress}:${req.connection.remotePort}`
+      ws.id = wsid(req)
 
       announce(`Client @ ${ws.id} connected`);
 

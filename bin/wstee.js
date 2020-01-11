@@ -6,7 +6,7 @@ const EventEmitter = require('events')
 var {program, parse, help} = require('../components/program')()
 const Keyboard = new (require('../components/keyboard'))(program)
 const StreamBitRate = require('../components/stream_bitrate')
-const CombinedStream = require('combined-stream');
+const wsid = require('../components/wsid')
 
 function collect(value, previous) {
   return previous.concat([value]);
@@ -37,7 +37,7 @@ const link = arr => {
     var s = WebSocket.createWebSocketStream(ws, { encoding: 'binary' })
     s.on('data', c => SBR.emit('in', c))
     ws.on('message', msg => {
-      emit.emit('message', msg)
+      emit.emit('message', msg, ws.id)
     })
     emit.on('send', msg => {
       ws.send(msg)
@@ -52,10 +52,11 @@ const link = arr => {
     }
     if (/\d+/.exec(element)) {
       var port = parseInt(element)
-      var wss = new WebSocket.Server(Object.assign({ port: program.port }, program.serverConfig))
+      var wss = new WebSocket.Server(Object.assign({ port }, program.serverConfig))
       console.log(`Listening on port ${port}`)
-      wss.on('connection', ws => {
-        console.log(`Port ${port} received a connection`)
+      wss.on('connection', (ws, req) => {
+        ws.id = wsid(req)
+        console.log(`${ws.id} => Port ${port}`)
         hookup(ws)
       })
     }
@@ -67,14 +68,14 @@ var incoming = link(program.connectIncoming)
 var outgoing = link(program.connectOutgoing)
 
 if (!program.pipe) {
-  incoming.on("message", msg => {
+  incoming.on("message", (msg, id) => {
     Keyboard.flip(true);
-    Keyboard.printWS(msg);
+    Keyboard.printWS(msg, id);
   });
 
-  outgoing.on("message", msg => {
+  outgoing.on("message", (msg, id) => {
     Keyboard.flip(false);
-    Keyboard.printWS(msg);
+    Keyboard.printWS(msg, id);
   });
 }
 
