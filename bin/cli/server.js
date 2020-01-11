@@ -23,7 +23,7 @@ module.exports = (program) => {
 
     wss.on("connection", ws => {
       clients.push(ws);
-      ws.enabled = true; // TODO setting
+      ws.enabled = !program.quiet;
       ws.number = counter++;
       console.log(`!!! Client #${ws.number} connected`);
       ws.on("message", msg => {
