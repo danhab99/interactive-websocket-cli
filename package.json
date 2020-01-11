@@ -1,6 +1,6 @@
 {
   "name": "interactive-websocket-cli",
-  "version": "1.4.4",
+  "version": "1.5.0",
   "description": "A websocket client for cli",
   "main": "wscli.js",
   "dependencies": {
